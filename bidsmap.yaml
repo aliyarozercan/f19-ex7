@@ -1,0 +1,368 @@
+# --------------------------------------------------------------------------------
+# This is a bidsmap YAML file with the key-value mappings for the different BIDS
+# modalities (anat, func, dwi, etc). The modality attributes are the keys that map
+# onto the BIDS labels. The bidsmap data-structure should be 5 levels deep:
+# dict > dict > list > dict > dict
+#
+# NB:
+# 1) Edit the bidsmap file to your needs before feeding it to bidscoiner.py
+# 2) (Institute) users may create their own bidsmap_[template].yaml or
+#    bidsmap_[sample].yaml file
+#
+# For more information, see:
+# https://github.com/Donders-Institute/bidscoin
+# https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+# --------------------------------------------------------------------------------
+
+
+Options:
+# --------------------------------------------------------------------------------
+# General options
+# --------------------------------------------------------------------------------
+  bidscoin:
+    version: '2.3'                # BIDScoin version (should correspond with the version in ../bidscoin/version.txt)
+    bidsignore: extra_data/       # Semicolon-separated list of entries that are added to the .bidsignore file (for more info, see BIDS specifications), e.g. extra_data/;pet/;myfile.txt;yourfile.csv
+  dcm2niix:                                       # See dcm2niix -h and https://www.nitrc.org/plugins/mwiki/index.php/dcm2nii:MainPage#General_Usage for more info
+    path: /usr/local/bin/                    # Command to set the path to dcm2niix (note the semi-colon), e.g. module add dcm2niix/1.0.20180622; or PATH=/opt/dcm2niix/bin:$PATH; or /opt/dcm2niix/bin/ or '"C:\Program Files\dcm2niix\"' (note the quotes to deal with the whitespace)
+    args: -b y -z y -i n                          # Argument string that is passed to dcm2niix. Tip: SPM users may want to use '-z n' (which produces unzipped nifti's, see dcm2niix -h for more information)
+
+
+PlugIns: []
+# --------------------------------------------------------------------------------
+# List of plugins to edit the key-value heuristics / perform additional operations
+# --------------------------------------------------------------------------------
+#- ~                               # Either a fullpath name of the plugin or just the basename when it is in the default bidscoin/plugins folder
+
+PlugIn:
+# --------------------------------------------------------------------------------
+# List of plugins to edit the key-value heuristics / perform additional operations
+# --------------------------------------------------------------------------------
+#- ~                               # Either a fullpath name of the plugin or just the basename when it is in the default bidscoin/plugins folder
+
+
+DICOM:
+# --------------------------------------------------------------------------------
+# DICOM key-value heuristics (DICOM fields that are mapped to the BIDS labels)
+# --------------------------------------------------------------------------------
+  subject: <<SourceFilePath>>     # <<SourceFilePath>> extracts the subject label from the source directory during bidscoiner runtime. A DICOM attribute can also be used as subject-label instead, e.g. <PatientID>
+  session: <<SourceFilePath>>     # <<SourceFilePath>> extracts the session label from the source directory during bidscoiner runtime. A DICOM attribute can also be used as session-label instead, e.g. <StudyID>
+  anat:       # ----------------------- All anatomical series --------------------
+  - provenance: /data/raw_trainer/sub-TD904TD/005-T1w/TD^TD904_005_T1w_00001_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: T1w
+      SeriesDescription: T1w
+      ImageType: "['ORIGINAL', 'PRIMARY', 'M', 'ND', 'NORM']"
+      SequenceName: '*tfl3d1_16ns'
+      SequenceVariant: "['SK', 'SP', 'MP']"
+      ScanningSequence: "['GR', 'IR']"
+      MRAcquisitionType: 3D
+      SliceThickness: '1'
+      FlipAngle: '9'
+      EchoNumbers: 1
+      EchoTime: '2.98'
+      RepetitionTime: '2300'
+      PhaseEncodingDirection: ''
+    bids:
+      acq: ''
+      ce:
+      rec:
+      run: <<1>>
+      mod:
+      suffix: T1w
+  func:       # ----------------------- All functional series --------------------
+  - provenance: /data/raw_trainer/sub-TD904TD/006-task-music_SBRef/TD^TD904_006_task-music_SBRef_00001_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: task-music
+      SeriesDescription: task-music_SBRef
+      ImageType: "['ORIGINAL', 'PRIMARY', 'M', 'ND', 'NORM', 'MOSAIC']"
+      SequenceName: epfid2d1_84
+      SequenceVariant: "['SK', 'SS']"
+      ScanningSequence: EP
+      MRAcquisitionType: 2D
+      SliceThickness: '2.5'
+      FlipAngle: '45'
+      EchoNumbers: 1
+      EchoTime: '30.2'
+      RepetitionTime: '1070'
+      PhaseEncodingDirection: ''
+    bids:
+      suffix: sbref
+      task: music
+      acq: 
+      ce:
+      dir: COL
+      rec:
+      run: <<1>>
+      echo: '1'
+  - provenance: /data/raw_trainer/sub-TD904TD/007-task-music/TD^TD904_007_task-music_00001_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: task-music
+      SeriesDescription: task-music
+      ImageType: "['ORIGINAL', 'PRIMARY', 'M', 'MB', 'ND', 'NORM', 'MOSAIC']"
+      SequenceName: epfid2d1_84
+      SequenceVariant: "['SK', 'SS']"
+      ScanningSequence: EP
+      MRAcquisitionType: 2D
+      SliceThickness: '2.5'
+      FlipAngle: '45'
+      EchoNumbers: 1
+      EchoTime: '30.2'
+      RepetitionTime: '1070'
+      PhaseEncodingDirection: ''
+    bids:
+      task: music
+      acq: 
+      ce:
+      dir: COL
+      rec:
+      run: <<1>>
+      echo: '1'
+      suffix: bold
+  - provenance: /data/raw_trainer/sub-TD904TD/009-task-prosody_SBRef/TD^TD904_009_task-prosody_SBRef_00001_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: task-prosody
+      SeriesDescription: task-prosody_SBRef
+      ImageType: "['ORIGINAL', 'PRIMARY', 'M', 'ND', 'NORM', 'MOSAIC']"
+      SequenceName: epfid2d1_84
+      SequenceVariant: "['SK', 'SS']"
+      ScanningSequence: EP
+      MRAcquisitionType: 2D
+      SliceThickness: '2.5'
+      FlipAngle: '45'
+      EchoNumbers: 1
+      EchoTime: '30.2'
+      RepetitionTime: '1070'
+      PhaseEncodingDirection: ''
+    bids:
+      suffix: sbref
+      task: prosody
+      acq: 
+      ce:
+      dir: COL
+      rec:
+      run: <<1>>
+      echo: '1'
+  - provenance: /data/raw_trainer/sub-TD904TD/010-task-prosody/TD^TD904_010_task-prosody_00001_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: task-prosody
+      SeriesDescription: task-prosody
+      ImageType: "['ORIGINAL', 'PRIMARY', 'M', 'MB', 'ND', 'NORM', 'MOSAIC']"
+      SequenceName: epfid2d1_84
+      SequenceVariant: "['SK', 'SS']"
+      ScanningSequence: EP
+      MRAcquisitionType: 2D
+      SliceThickness: '2.5'
+      FlipAngle: '45'
+      EchoNumbers: 1
+      EchoTime: '30.2'
+      RepetitionTime: '1070'
+      PhaseEncodingDirection: ''
+    bids:
+      task: prosody
+      acq: 
+      ce:
+      dir: COL
+      rec:
+      run: <<1>>
+      echo: '1'
+      suffix: bold
+  dwi:        # ----------------------- All diffusion series ---------------------
+  fmap:       # ----------------------- All fieldmap series ----------------------
+  beh:        # ----------------------- All behavioural data ---------------------
+  pet:        # ----------------------- All PET series ---------------------------
+  extra_data: # ----------------------- All extra data ---------------------------
+  - provenance: /data/raw_trainer/sub-TD904TD/001-AAHead_Scout/TD^TD904_001_AAHead_Scout_00001_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: AAHead_Scout
+      SeriesDescription: AAHead_Scout
+      ImageType: "['ORIGINAL', 'PRIMARY', 'M', 'ND', 'NORM']"
+      SequenceName: '*fl3d1_ns'
+      SequenceVariant: SP
+      ScanningSequence: GR
+      MRAcquisitionType: 3D
+      SliceThickness: '1.6000000238419'
+      FlipAngle: '8'
+      EchoNumbers: 1
+      EchoTime: '1.37'
+      RepetitionTime: '3.15'
+      PhaseEncodingDirection: ''
+    bids:
+      acq: AAHeadScout
+      rec:
+      ce:
+      task:
+      echo: '1'
+      dir: ROW
+      run: <<1>>
+      mod:
+      suffix:
+  - provenance: /data/raw_trainer/sub-TD904TD/002-AAHead_Scout_MPR_sag/TD^TD904_002_AAHead_Scout_MPR_sag_00001_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: AAHead_Scout
+      SeriesDescription: AAHead_Scout_MPR_sag
+      ImageType: "['DERIVED', 'PRIMARY', 'MPR', 'ND', 'NORM']"
+      SequenceName: '*fl3d1_ns'
+      SequenceVariant: SP
+      ScanningSequence: GR
+      MRAcquisitionType: 3D
+      SliceThickness: '1.6000000238419'
+      FlipAngle: '8'
+      EchoNumbers: 1
+      EchoTime: '1.37'
+      RepetitionTime: '3.15'
+      PhaseEncodingDirection: ''
+    bids:
+      acq: AAHeadScoutMPRsag
+      rec:
+      ce:
+      task:
+      echo: '1'
+      dir: <InPlanePhaseEncodingDirection>
+      run: <<1>>
+      mod:
+      suffix:
+  - provenance: /data/raw_trainer/sub-TD904TD/003-AAHead_Scout_MPR_cor/TD^TD904_003_AAHead_Scout_MPR_cor_00001_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: AAHead_Scout
+      SeriesDescription: AAHead_Scout_MPR_cor
+      ImageType: "['DERIVED', 'PRIMARY', 'MPR', 'ND', 'NORM']"
+      SequenceName: '*fl3d1_ns'
+      SequenceVariant: SP
+      ScanningSequence: GR
+      MRAcquisitionType: 3D
+      SliceThickness: '1.6000000238419'
+      FlipAngle: '8'
+      EchoNumbers: 1
+      EchoTime: '1.37'
+      RepetitionTime: '3.15'
+      PhaseEncodingDirection: ''
+    bids:
+      acq: AAHeadScoutMPRcor
+      rec:
+      ce:
+      task:
+      echo: '1'
+      dir: <InPlanePhaseEncodingDirection>
+      run: <<1>>
+      mod:
+      suffix:
+  - provenance: /data/raw_trainer/sub-TD904TD/004-AAHead_Scout_MPR_tra/TD^TD904_004_AAHead_Scout_MPR_tra_00001_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: AAHead_Scout
+      SeriesDescription: AAHead_Scout_MPR_tra
+      ImageType: "['DERIVED', 'PRIMARY', 'MPR', 'ND', 'NORM']"
+      SequenceName: '*fl3d1_ns'
+      SequenceVariant: SP
+      ScanningSequence: GR
+      MRAcquisitionType: 3D
+      SliceThickness: '1.6000000238419'
+      FlipAngle: '8'
+      EchoNumbers: 1
+      EchoTime: '1.37'
+      RepetitionTime: '3.15'
+      PhaseEncodingDirection: ''
+    bids:
+      acq: AAHeadScoutMPRtra
+      rec:
+      ce:
+      task:
+      echo: '1'
+      dir: <InPlanePhaseEncodingDirection>
+      run: <<1>>
+      mod:
+      suffix:
+  - provenance: /data/raw_trainer/sub-TD904TD/008-task-music_PhysioLog/TD^TD904_008_task-music_PhysioLog_00927_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: task-music
+      SeriesDescription: task-music_PhysioLog
+      ImageType: "['ORIGINAL', 'PRIMARY', 'RAWDATA', 'PHYSIO']"
+      SequenceName: ''
+      SequenceVariant: ''
+      ScanningSequence: ''
+      MRAcquisitionType: ''
+      SliceThickness: ''
+      FlipAngle: ''
+      EchoNumbers: ''
+      EchoTime: ''
+      RepetitionTime: ''
+      PhaseEncodingDirection: ''
+    bids:
+      acq: musicPhysioLog
+      rec:
+      ce:
+      task:
+      echo: <EchoNumbers>
+      dir: <InPlanePhaseEncodingDirection>
+      run: <<1>>
+      mod:
+      suffix:
+  - provenance: /data/raw_trainer/sub-TD904TD/011-task-prosody_PhysioLog/TD^TD904_011_task-prosody_PhysioLog_01085_00001.dcm
+    attributes:
+      Modality: MR
+      ProtocolName: task-prosody
+      SeriesDescription: task-prosody_PhysioLog
+      ImageType: "['ORIGINAL', 'PRIMARY', 'RAWDATA', 'PHYSIO']"
+      SequenceName: ''
+      SequenceVariant: ''
+      ScanningSequence: ''
+      MRAcquisitionType: ''
+      SliceThickness: ''
+      FlipAngle: ''
+      EchoNumbers: ''
+      EchoTime: ''
+      RepetitionTime: ''
+      PhaseEncodingDirection: ''
+    bids:
+      acq: prosodyPhysioLog
+      rec:
+      ce:
+      task:
+      echo: <EchoNumbers>
+      dir: <InPlanePhaseEncodingDirection>
+      run: <<1>>
+      mod:
+      suffix:
+  leave_out:  # ----------------------- Data that will be left out ---------------
+PAR:
+# --------------------------------------------------------------------------------
+# PAR key-value heuristics (Philips PAR fields that are mapped to the BIDS labels)
+# --------------------------------------------------------------------------------
+
+
+P7:
+# --------------------------------------------------------------------------------
+# P*.7 key-value heuristics (GE fields that are mapped to the BIDS labels)
+# --------------------------------------------------------------------------------
+
+
+Nifti:
+# --------------------------------------------------------------------------------
+# Nifti key-value heuristics (Nifti fields that are mapped to the BIDS labels)
+# --------------------------------------------------------------------------------
+
+
+FileSystem:
+# --------------------------------------------------------------------------------
+# File system key-value heuristics (these file- and foldernames will be mapped
+# to the BIDS labels; Special substitutions can be performed using python's
+# Format Specification Mini-Language)
+# --------------------------------------------------------------------------------
+  subject: <<SourceFilePath>>       # <<SourceFilePath>> extracts the subject label from the source directory during bidscoiner runtime
+  session: <<SourceFilePath>>       # <<SourceFilePath>> extracts the session label from the source directory during bidscoiner runtime
+  anat:       # ----------------------- All anatomical series --------------------
+  func:       # ----------------------- All functional series --------------------
+  dwi:        # ----------------------- All diffusion series ---------------------
+  fmap:       # ----------------------- All fieldmap series ----------------------
+  beh:        # ----------------------- All behavioural data ---------------------
+  extra_data: # ----------------------- All extra data ---------------------------
+  leave_out:  # ----------------------- Data that will be left out ---------------
